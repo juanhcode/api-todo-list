@@ -1,14 +1,15 @@
-const moongose = require('mongoose');
-
-const connectDb = async ()=>{
-    try {
-        await moongose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster.sivduyo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster`);
-        console.log("BD conectada");
-    } catch (error) {
-        console.log(error);
+const { Sequelize } = require('sequelize');
+require('dotenv').config();
+const db = new Sequelize(
+    {
+        database: process.env.POSTGRESQL_ADDON_DB,
+        username: process.env.POSTGRESQL_ADDON_USER,
+        password: process.env.POSTGRESQL_ADDON_PASSWORD,
+        host: process.env.POSTGRESQL_ADDON_HOST,
+        dialect: 'postgres',
+        loggin: false,
+        port: process.env.POSTGRESQL_ADDON_PORT
     }
-};
+)
 
-module.exports = {
-    connectDb,
-}
+module.exports = db;
