@@ -1,11 +1,11 @@
-const investmentService = require('../services/investment.service');
+const taskService = require('../services/task.service');
 const createTask = async (req, res) => {
     const { reminder, notes, priority,location,user_id } = req.body;
     const newTask = {
         reminder, notes, priority,location,user_id
     }
     try {
-        const response = await investmentService.createTask(newInvestment);
+        const response = await taskService.createTask(newTask);
         if (response?.errors) {
             res.status(400).json({
                 status:'BAD REQUEST',
@@ -14,7 +14,7 @@ const createTask = async (req, res) => {
         }
         res.status(201).json({
             status:"CREATED",
-            data: "Investment created",
+            data: "Task created",
         })
     } catch (error) {
         res.status(500).json({
@@ -24,72 +24,73 @@ const createTask = async (req, res) => {
     }
 }
 
-const deleteInvestment = async (req, res) => {
+const deleteTask = async (req, res) => {
     const { id } = req.params;
-    const investmentExists = await investmentService.investmentExistsById(id);
-    if (!investmentExists) {
+    const taskExists = await taskService.taskExistsById(id);
+    if (!taskExists) {
         return res.status(404).json({
-            msg: `No existe la inversión con el id ${id}`
+            msg: `No existe la tarea con el id ${id}`
         })
     }
-    await investmentService.deleteInvestment(id);
+    await taskService.deleteTask(id);
     res.status(200).json({
-        msg: `Inversión con el id ${id} ha sido eliminado.`
+        msg: `tarea con el id ${id} ha sido eliminado.`
     });
 
 }
 
-const getInvestment = async (req, res) => {
+const getTask = async (req, res) => {
     const id = req.params.id;
+    console.log(id);
     try {
-        const investment = await investmentService.getInvestmentById(id);
-        if(investment){
-            res.status(200).json(investment);
+        const task = await taskService.getTaskById(id);
+        if(task){
+            res.status(200).json(task);
         }else{
             res.status(400).json({ error: 'Ups, vuelve a intentarlo' });
         }
         
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener la inversión' });
+        res.status(500).json({ error: 'Error al obtener la tarea' });
     }
 }
 
-const getAllInvestments = async (req, res) => {
+const getAllTasks = async (req, res) => {
     const id = req.params.id;
     try {
-        const investment = await investmentService.getAllInvestments(id);
-        if(investment.length > 0){
-            res.status(200).json(investment);
+        const tasks = await taskService.getAllTasks(id);
+        if(tasks.length > 0){
+            res.status(200).json(tasks);
         }else{
-            res.status(200).json({ error: 'No tienes inversiones, crea una 😁' });
+            res.status(200).json({ error: 'No tienes tareas, crea una 😁' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener todos las inversiones' });
+        res.status(500).json({ error: 'Error al obtener todos las tareas' });
     }
 }
 
-const updateInvestment = async (req, res) => {
+const updateTask = async (req, res) => {
     const id = req.params.id;
-    const { description, quantity,price,type_of_investment,currency,user_id } = req.body;
-    const newInvestment = {
-        description, quantity, price, type_of_investment,currency, user_id
+    const { reminder, notes, priority,location,user_id } = req.body;
+    const newTask = {
+        reminder, notes, priority,location,user_id
     } 
-    const investmentExists = await investmentService.investmentExistsById(id);
-    if (!investmentExists) {
+    const taskExists = await taskService.taskExistsById(id);
+    if (!taskExists) {
         return res.status(404).json({
-            msg: `No existe la inversión con el id ${id}`
+            msg: `No existe la tarea con el id ${id}`
         })
     }
-    await investmentService.updateInvestment(id, newInvestment);
+    await taskService.updateTask(id, newTask);
     res.status(200).json({
-        msg: `La Inversión ha sido actualizada.`
+        msg: `La tarea ha sido actualizada.`
     });
 }
 
 module.exports = {
-    createInvestment,
-    deleteInvestment,
-    getInvestment,
-    getAllInvestments,
-    updateInvestment
+    createTask,
+    deleteTask,
+    getTask,
+    getAllTasks,
+    updateTask
 }
