@@ -1,33 +1,19 @@
 const User = require('../database/models/user.model');
 const bcrypt = require('bcrypt');
-const login = async (newUser) => {
-    console.log(newUser);
-    const { user, password } = newUser;
-    try {
-        const userFound = await User.findOne().where({ username: user });
-        if (userFound == null) {
-            return null;
+const isValidEmail = async (email_address) => {
+    const isEmailExists = await User.findOne({
+        where: {
+            email_address,
         }
-        const isPassword = await bcrypt.compare(password, userFound.password);
-        console.log(isPassword);
-        console.log(userFound);
-        if (!isPassword) {
-            return false;
-        }
-        return {
-            flag: true,
-            user: userFound,
-        };
-    } catch (error) {
-        return error;
-    }
+    })
+    return isEmailExists;
 }
-
 const createUser = async (newUser) => {
-    const { password, username } = newUser;
+    const { user_name, email_address,password } = newUser;
     const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
-        username,
+        user_name,
+        email_address,
         password: passwordHash,
     });
     try {
@@ -37,14 +23,8 @@ const createUser = async (newUser) => {
         return error;
     }
 }
-const getUserById = async (id) => {
-    const user = User.findById(id);
-    return user;
-}
-
 
 module.exports = {
-    login,
-    createUser,
-    getUserById
+    isValidEmail,
+    createUser
 }

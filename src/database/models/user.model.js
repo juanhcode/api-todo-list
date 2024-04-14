@@ -1,19 +1,35 @@
-const mongoose = require('mongoose');
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        require: true,
-        trim: true,
-        unique: true
+const { DataTypes } = require('sequelize');
+const db = require('../connection');
+
+const User = db.define('"user"', {
+    user_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey:true
+    },
+    user_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    email_address: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     password: {
-        type: String,
-    },
-}, {
-    timestamps: true
+        type: DataTypes.STRING,
+        allowNull: false
+    }},
+    {
+    timestamps: false,
+    freezeTableName: true,
+    tableName: '"user"'
+});
+
+User.prototype.toJSON = function(){
+    let values = Object.assign({}, this.get());
+    delete values.password;
+    return values;
 }
 
-);
 
-const User = mongoose.model('User', userSchema);
 module.exports = User;
