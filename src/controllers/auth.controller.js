@@ -18,7 +18,11 @@ const login = async (req, res) => {
                 msg: 'Contraseña incorrecta'
             });
         }
-        const token = await tokenSign(isEmailExists);
+        const user = {
+            id: isEmailExists.user_id,
+            email_address,
+        }
+        const token = await tokenSign(user);
         res.status(200).json({
             token
         }) 
